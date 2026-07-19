@@ -197,6 +197,15 @@ document.querySelector("#balance-button").addEventListener("click", runBalancer)
 input.addEventListener("keydown", event => { if (event.key === "Enter") runBalancer(); });
 document.querySelector("#clear-button").addEventListener("click", () => { input.value = ""; errorBox.hidden = true; results.hidden = true; input.focus(); });
 document.querySelectorAll(".example").forEach(button => button.addEventListener("click", () => { input.value = button.dataset.equation; runBalancer(); }));
-document.querySelector("#copy-button").addEventListener("click", async event => { await navigator.clipboard.writeText(lastPlainResult); event.currentTarget.textContent = "Copied!"; setTimeout(() => event.currentTarget.textContent = "Copy equation", 1300); });
+document.querySelector("#copy-button").addEventListener("click", async event => {
+  const button = event.currentTarget;
+  try {
+    await navigator.clipboard.writeText(lastPlainResult);
+    button.textContent = "Copied!";
+  } catch {
+    button.textContent = "Copy failed";
+  }
+  setTimeout(() => { button.textContent = "Copy equation"; }, 1300);
+});
 document.querySelector("#clear-history").addEventListener("click", () => { localStorage.removeItem(HISTORY_KEY); renderHistory(); });
 renderHistory();
