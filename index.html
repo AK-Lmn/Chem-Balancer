@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Balance chemical equations with exact whole-number coefficients and atom counts.">
+  <title>Chemical Equation Balancer — ChemKit</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+
+  <header class="topbar">
+    <a class="brand" href="https://chemkit.vercel.app/" aria-label="Chem-Balancer by ChemKit">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 40 40" role="img">
+          <circle cx="20" cy="20" r="3.2" class="atom-core"/>
+          <ellipse cx="20" cy="20" rx="16" ry="6.7"/>
+          <ellipse cx="20" cy="20" rx="16" ry="6.7" transform="rotate(60 20 20)"/>
+          <ellipse cx="20" cy="20" rx="16" ry="6.7" transform="rotate(120 20 20)"/>
+          <circle cx="34.5" cy="22.5" r="1.7" class="electron"/>
+        </svg>
+      </span>
+      <span class="brand-copy">
+        <strong>Chem-Balancer</strong>
+        <small>by ChemKit</small>
+      </span>
+    </a>
+    <nav aria-label="Site links">
+      <a class="button button-ghost" href="https://chemkit.vercel.app/">← Back to ChemKit</a>
+      <a class="icon-button" href="https://github.com/" target="_blank" rel="noreferrer" aria-label="View on GitHub" title="GitHub placeholder">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.87c-2.78.6-3.37-1.18-3.37-1.18-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.35 1.09 2.92.83.09-.65.35-1.09.64-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.58 9.58 0 0 1 12 6.82a9.6 9.6 0 0 1 2.5.34c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.86v2.76c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg>
+      </a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="eyebrow"><span></span> Equation balancing made simple</div>
+      <h1>Chemical Equation <span>Balancer</span></h1>
+      <p>Paste an unbalanced chemical equation and get the balanced version with atom counts.</p>
+    </section>
+
+    <section class="glass input-card" aria-labelledby="input-heading">
+      <div class="section-heading">
+        <div><span class="step">01</span><h2 id="input-heading">Enter an equation</h2></div>
+        <span class="syntax">Supports →, -&gt;, and =</span>
+      </div>
+      <label for="equation">Chemical equation</label>
+      <div class="input-wrap">
+        <input id="equation" type="text" autocomplete="off" spellcheck="false" placeholder="e.g. C3H8 + O2 -> CO2 + H2O" aria-describedby="input-hint error-message">
+        <span class="flask" aria-hidden="true">⚗</span>
+      </div>
+      <p id="input-hint" class="hint">Use standard element symbols and parentheses. Existing coefficients are accepted.</p>
+      <div id="error-message" class="error" role="alert" hidden></div>
+      <div class="actions">
+        <button id="balance-button" class="button button-primary" type="button"><span>Balance equation</span><b>→</b></button>
+        <button id="clear-button" class="button button-secondary" type="button">Clear</button>
+      </div>
+    </section>
+
+    <section class="examples" aria-labelledby="examples-heading">
+      <h2 id="examples-heading">Try an example</h2>
+      <div class="example-list">
+        <button class="example" data-equation="H2 + O2 -> H2O">H₂ + O₂ → H₂O</button>
+        <button class="example" data-equation="Fe + O2 -> Fe2O3">Fe + O₂ → Fe₂O₃</button>
+        <button class="example" data-equation="C3H8 + O2 -> CO2 + H2O">C₃H₈ + O₂ → CO₂ + H₂O</button>
+        <button class="example" data-equation="Ca(OH)2 + HCl -> CaCl2 + H2O">Ca(OH)₂ + HCl → CaCl₂ + H₂O</button>
+      </div>
+    </section>
+
+    <section id="results" class="glass results-card" aria-labelledby="results-heading" hidden>
+      <div class="section-heading">
+        <div><span class="step success">02</span><h2 id="results-heading">Balanced result</h2></div>
+        <span class="balanced-badge">✓ Balanced</span>
+      </div>
+      <div class="equation-result">
+        <span class="result-label">Balanced equation</span>
+        <div id="balanced-equation" class="balanced-equation"></div>
+        <button id="copy-button" class="copy-button" type="button">Copy equation</button>
+      </div>
+      <div class="result-grid">
+        <div>
+          <h3>Coefficients</h3>
+          <div id="coefficients" class="coefficient-list"></div>
+        </div>
+        <div>
+          <h3>Atom count check</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Element</th><th>Reactants</th><th>Products</th><th>Status</th></tr></thead>
+              <tbody id="atom-table"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="history-section" aria-labelledby="history-heading">
+      <div class="section-heading">
+        <div><span class="step">03</span><h2 id="history-heading">Recent history</h2></div>
+        <button id="clear-history" class="text-button" type="button">Clear history</button>
+      </div>
+      <div id="history-list" class="history-list"></div>
+      <p id="empty-history" class="empty-state">Your recently balanced equations will appear here.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-brand">
+      <span class="footer-brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 40 40">
+          <circle cx="20" cy="20" r="3.2" class="atom-core"/>
+          <ellipse cx="20" cy="20" rx="16" ry="6.7"/>
+          <ellipse cx="20" cy="20" rx="16" ry="6.7" transform="rotate(60 20 20)"/>
+          <ellipse cx="20" cy="20" rx="16" ry="6.7" transform="rotate(120 20 20)"/>
+          <circle cx="34.5" cy="22.5" r="1.7" class="electron"/>
+        </svg>
+      </span>
+      <span class="footer-brand-copy">
+        <strong>Chem-Balancer</strong>
+        <small>by ChemKit</small>
+      </span>
+    </div>
+    <p>Built for curious minds exploring chemistry.</p>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
