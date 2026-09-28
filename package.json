@@ -1,0 +1,17 @@
+{
+  "name": "chem-balancer",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node --check src/lib/balancer.js && node --check script.js && eslint . --max-warnings 0",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.9.1"
+  },
+  "engines": {
+    "node": ">=20.19"
+  }
+}
